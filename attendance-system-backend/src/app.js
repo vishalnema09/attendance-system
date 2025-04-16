@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const connectDB = require("./config/database");
 const authRoutes = require("./routes/adminRoutes");
+const employeeRoutes = require("./routes/employeeRoutes");
 require("dotenv").config();
 
 const app = express();
@@ -16,6 +17,7 @@ connectDB()
 
     // Define routes after DB connection
     app.use("/api/auth", authRoutes);
+    app.use("/api/employee", employeeRoutes);
 
     // Start the server once DB is connected
     app.listen(3000, () => {

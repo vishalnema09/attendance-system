@@ -26,5 +26,13 @@ const isAdmin = (req, res, next) => {
   }
 };
 
-module.exports = { verifyToken, isAdmin };
+const isEmployee = (req, res, next) => {
+  if (req.user.role !== "employee") {
+    return res.status(403).json({ message: "Access Denied. Employees only." });
+  }
+  next();
+};
+
+
+module.exports = { verifyToken, isAdmin, isEmployee };
 

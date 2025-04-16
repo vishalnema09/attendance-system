@@ -11,7 +11,7 @@ router.post("/admin/register", registerAdmin);
 // ✅ Admin Login Route
 router.post("/admin/login", loginAdmin);
 
-router.post("/admin/logout", verifyToken, logoutAdmin); // 👈 Add this route
+router.get("/admin/logout", verifyToken, logoutAdmin); // 👈 Add this route
 
 router.post("/admin/register-employee", verifyToken, registerEmployee);
 
