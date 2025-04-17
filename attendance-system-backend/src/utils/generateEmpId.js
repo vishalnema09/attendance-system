@@ -1,11 +1,5 @@
-const crypto = require("crypto");
-
 const generateEmpId = () => {
-  // Prefix + 4-digit random number
-  const randomNum = Math.floor(1000 + Math.random() * 9000); // 1000–9999
-  const uniqueId = `EMP${randomNum}`;
-
-  return uniqueId;
-};
-
-module.exports = generateEmpId;
+    return "EMP" + Math.floor(Math.random() * 10000);  // Generates a random 4-digit Employee ID
+  };
+  
+  module.exports = generateEmpId;
