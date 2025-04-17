@@ -2,6 +2,8 @@ const User = require("../models/userModel"); // User Model import
 const Attendance = require("../models/attendanceModel"); // 
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const streamifier = require('streamifier');
+const cloudinary = require("../config/cloudinary"); 
 
 exports.loginEmployee = async (req, res) => {
     const { empId, password } = req.body;
@@ -56,6 +58,7 @@ exports.loginEmployee = async (req, res) => {
     }
   };
 
+  
   exports.logoutEmployee = async (req, res) => {
     try {
       res.clearCookie("token");
@@ -70,10 +73,16 @@ exports.loginEmployee = async (req, res) => {
       });
     }
   };
-
   exports.markAttendance = async (req, res) => {
     try {
-      const { empId, location, photo } = req.body;
+      const { empId, location } = req.body;
+      const file = req.file; // Assuming file is being uploaded via 'multer'
+  
+      if (!empId || !location || !file) {
+        return res.status(400).json({
+          message: "Please provide all required fields (empId, location, and photo)",
+        });
+      }
   
       // Check if the employee exists and is authorized as 'employee'
       const employee = await User.findOne({ empId, role: 'employee' });
@@ -83,12 +92,28 @@ exports.loginEmployee = async (req, res) => {
   
       // Check if attendance is already marked for today
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0); // Normalize date to compare only the date part
   
       const alreadyMarked = await Attendance.findOne({ empId, date: today });
       if (alreadyMarked) {
         return res.status(400).json({ message: 'Attendance already marked today' });
       }
+  
+      // 📤 Upload buffer image to Cloudinary using upload_stream
+      const streamUpload = (fileBuffer) => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "GoBite" },
+            (error, result) => {
+              if (result) resolve(result);
+              else reject(error);
+            }
+          );
+          streamifier.createReadStream(fileBuffer).pipe(stream);
+        });
+      };
+  
+      const uploadResult = await streamUpload(file.buffer);
   
       // Create a new attendance record
       const attendance = new Attendance({
@@ -96,7 +121,7 @@ exports.loginEmployee = async (req, res) => {
         empId,
         name: employee.name,
         location,
-        photo,
+        photo: uploadResult.secure_url,
         date: today,
       });
   
@@ -107,7 +132,12 @@ exports.loginEmployee = async (req, res) => {
         message: 'Attendance marked successfully',
         attendance,
       });
+  
     } catch (error) {
-      res.status(500).json({ message: 'Server Error', error });
+      res.status(500).json({
+        message: 'Server Error',
+        error: error.message,
+      });
     }
   };
+  
