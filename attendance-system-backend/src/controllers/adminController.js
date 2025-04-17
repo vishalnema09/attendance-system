@@ -1,5 +1,6 @@
 // controllers/authController.js
 const User = require("../models/userModel");
+const Attendance = require("../models/attendanceModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const sendEmail = require("../utils/sendEmail");
@@ -138,5 +139,55 @@ exports.registerEmployee = async (req, res) => {
   } catch (error) {
     console.error("Error in employee registration:", error);
     res.status(500).json({ message: "Server Error", error });
+  }
+};
+exports.getEmployeeAttendance = async (req, res) => {
+  try {
+    const { empId } = req.params;
+
+    if (!empId) {
+      return res.status(400).json({
+        message: "Employee ID is required",
+      });
+    }
+
+    const userExists = await User.findOne({ empId, role: "employee" });
+    if (!userExists) {
+      return res.status(404).json({
+        message: "Employee not found or not registered",
+      });
+    }
+
+    const attendanceRecords = await Attendance.find({ empId }).sort({ createdAt: -1 });
+
+    res.status(200).json({
+      message: "Attendance fetched successfully",
+      count: attendanceRecords.length,
+      records: attendanceRecords,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong while fetching attendance",
+      error: error.message,
+    });
+  }
+};
+
+// ✅ GET /api/admin/employees
+exports.getAllEmployees = async (req, res) => {
+  try {
+    const employees = await User.find({ role: "employee" }).select("-password");
+
+    res.status(200).json({
+      success: true,
+      message: "Employees fetched successfully",
+      employees,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch employees",
+      error: error.message,
+    });
   }
 };
