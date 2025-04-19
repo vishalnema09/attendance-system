@@ -7,7 +7,7 @@ const getToken = () => {
 };
 
 const Axios = axios.create({
-  baseURL: "http://localhost:3000", // ✅ Updated base URL
+  baseURL: "https://attendance-system-backend-9z8d.onrender.com", // ✅ Updated base URL
   withCredentials: true, // ✅ Updated base URL
   headers: {
     "Content-Type": "application/json",
