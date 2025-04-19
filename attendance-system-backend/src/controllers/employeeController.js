@@ -38,7 +38,7 @@ exports.loginEmployee = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // only secure in prod
-      sameSite: "strict",
+      sameSite: "None",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
 
