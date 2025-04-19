@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const multer = require('multer');
+const multer = require("multer");
 
-const storage = multer.memoryStorage();  // This stores file in memory (in buffer)
-const upload = multer({ storage: storage });  // This is the middleware you'll use
+const storage = multer.memoryStorage(); // This stores file in memory (in buffer)
+const upload = multer({ storage: storage }); // This is the middleware you'll use
 const {
   loginEmployee,
   logoutEmployee,
@@ -12,7 +12,7 @@ const {
 
 // Employee Login
 router.post("/login-employee", loginEmployee);
-const { verifyToken , isEmployee} = require("../middleware/authMiddleware");
+const { verifyToken, isEmployee } = require("../middleware/authMiddleware");
 
 // Employee Logout
 router.get("/logout-employee", verifyToken, logoutEmployee);

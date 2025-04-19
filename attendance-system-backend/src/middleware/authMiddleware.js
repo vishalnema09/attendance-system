@@ -1,17 +1,18 @@
+// /middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
 
 const verifyToken = (req, res, next) => {
-  const authHeader = req.headers.authorization;
+  const token = req.cookies.token;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Unauthorized, token missing" });
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "Unauthorized, token missing in cookies" });
   }
-
-  const token = authHeader.split(" ")[1];
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // contains userId and role
+    req.user = decoded; // { userId, role }
     next();
   } catch (error) {
     return res.status(401).json({ message: "Invalid token" });
@@ -27,12 +28,11 @@ const isAdmin = (req, res, next) => {
 };
 
 const isEmployee = (req, res, next) => {
-  if (req.user.role !== "employee") {
+  if (req.user && req.user.role === "employee") {
+    next();
+  } else {
     return res.status(403).json({ message: "Access Denied. Employees only." });
   }
-  next();
 };
 
-
 module.exports = { verifyToken, isAdmin, isEmployee };
-

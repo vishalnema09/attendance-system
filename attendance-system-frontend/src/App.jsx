@@ -1,11 +1,19 @@
-import React from 'react'
+import React from "react";
+import TestApi from "./components/TestApi";
+import { Outlet } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
 
 const App = () => {
   return (
     <div>
-      <h1 className=' bg-amber-600'>this is app</h1>
+      <Header />
+      <Outlet />
+      <Footer />
+      <Toaster />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;

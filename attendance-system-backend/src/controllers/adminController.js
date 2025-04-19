@@ -15,7 +15,9 @@ exports.registerAdmin = async (req, res) => {
   try {
     const existingAdmin = await User.findOne({ empId, role: "admin" });
     if (existingAdmin) {
-      return res.status(400).json({ success: false, msg: "Admin already exists" });
+      return res
+        .status(400)
+        .json({ success: false, msg: "Admin already exists" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -50,6 +52,7 @@ exports.registerAdmin = async (req, res) => {
 // Admin Login
 exports.loginAdmin = async (req, res) => {
   const { empId, password } = req.body;
+  console.log(empId, password);
 
   try {
     const admin = await User.findOne({ empId });
@@ -101,7 +104,6 @@ exports.logoutAdmin = (req, res) => {
   }
 };
 
-
 exports.registerEmployee = async (req, res) => {
   try {
     const { name, email } = req.body;
@@ -112,7 +114,9 @@ exports.registerEmployee = async (req, res) => {
     // Check uniqueness of empId
     const existing = await User.findOne({ empId });
     if (existing) {
-      return res.status(400).json({ message: "Generated empId already exists. Try again." });
+      return res
+        .status(400)
+        .json({ message: "Generated empId already exists. Try again." });
     }
 
     const hashedPassword = await bcrypt.hash(plainPassword, 10);
@@ -129,10 +133,15 @@ exports.registerEmployee = async (req, res) => {
 
     // ✅ Send email after successful registration
     const emailHTML = employeeWelcomeTemplate(name, empId, plainPassword);
-    await sendEmail(email, "Welcome to the Company! Your Login Credentials", emailHTML);
+    await sendEmail(
+      email,
+      "Welcome to the Company! Your Login Credentials",
+      emailHTML
+    );
 
     res.status(201).json({
-      message: "Employee registered successfully and credentials sent via email",
+      message:
+        "Employee registered successfully and credentials sent via email",
       empId,
       password: plainPassword,
     });
@@ -144,6 +153,7 @@ exports.registerEmployee = async (req, res) => {
 exports.getEmployeeAttendance = async (req, res) => {
   try {
     const { empId } = req.params;
+    console.log("Fetching attendance for empId:", empId);
 
     if (!empId) {
       return res.status(400).json({
@@ -158,7 +168,9 @@ exports.getEmployeeAttendance = async (req, res) => {
       });
     }
 
-    const attendanceRecords = await Attendance.find({ empId }).sort({ createdAt: -1 });
+    const attendanceRecords = await Attendance.find({ empId }).sort({
+      createdAt: -1,
+    });
 
     res.status(200).json({
       message: "Attendance fetched successfully",

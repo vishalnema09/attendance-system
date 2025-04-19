@@ -1,17 +1,20 @@
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const cors = require("cors")
+const cors = require("cors");
 const connectDB = require("./config/database");
 const authRoutes = require("./routes/adminRoutes");
+const adminRoutes = require("./routes/adminRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
 require("dotenv").config();
 
 const app = express();
 
-app.use(cors({
-  origin: "http://localhost:5173", // replace with your frontend URL
-  credentials: true // allow cookies to be sent cross-origin
-}));
+app.use(
+  cors({
+    origin: "http://localhost:5173", // replace with your frontend URL
+    credentials: true, // allow cookies to be sent cross-origin
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());
@@ -21,7 +24,7 @@ connectDB()
   .then(() => {
     console.log("Connected to MongoDB");
 
-    app.use("/api/auth", authRoutes);
+    app.use("/api/auth", adminRoutes);
     app.use("/api/employee", employeeRoutes);
 
     app.listen(3000, () => {

@@ -1,10 +1,9 @@
-
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const attendanceSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User', // referring to User model
+      ref: "User", // referring to User model
       required: true,
     },
     empId: {
@@ -17,7 +16,7 @@ const attendanceSchema = new mongoose.Schema(
     },
     location: {
       type: String,
-      default: 'Not Provided',
+      default: "Not Provided",
     },
     photo: {
       type: String,
@@ -33,4 +32,4 @@ const attendanceSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('Attendance', attendanceSchema);
+module.exports = mongoose.model("Attendance", attendanceSchema);

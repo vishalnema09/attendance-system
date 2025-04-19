@@ -1,6 +1,9 @@
 const cloudinary = require("../config/cloudinary.js");
 
-export const uploadToCloudinary = async (base64Image, folderName = "GoBite") => {
+export const uploadToCloudinary = async (
+  base64Image,
+  folderName = "GoBite"
+) => {
   try {
     const res = await cloudinary.uploader.upload(base64Image, {
       folder: folderName,
