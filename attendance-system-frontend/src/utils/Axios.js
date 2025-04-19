@@ -6,6 +6,7 @@ const getToken = () => {
   return localStorage.getItem("token");
 };
 
+
 const Axios = axios.create({
   baseURL: "http://localhost:3000", // ✅ Updated base URL
   withCredentials: true, // ✅ Updated base URL

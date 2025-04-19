@@ -1,6 +1,6 @@
 const SummaryApi = {
   adminRegister: {
-    url: "/api/admin/register",
+    url: "/api/auth/admin/register",
   },
   adminLogin: {
     url: "/api/auth/admin/login",
