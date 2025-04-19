@@ -11,7 +11,7 @@ const app = express();
 
 app.use(
   cors({
-    origin: "http://localhost:5173", // replace with your frontend URL
+    origin: "https://attendance-system-frontend-t9bz.onrender.com", // replace with your frontend URL
     credentials: true, // allow cookies to be sent cross-origin
   })
 );
