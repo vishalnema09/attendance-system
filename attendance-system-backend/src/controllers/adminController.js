@@ -73,6 +73,9 @@ exports.loginAdmin = async (req, res) => {
 
     res.cookie("token", token, {
       maxAge: 24 * 60 * 60 * 1000,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // this is must
+      sameSite: "None", // this is most likely the problem!
     });
 
     res.status(200).json({
