@@ -13,7 +13,7 @@ const sendEmail = async (to, subject, html) => {
     });
 
     const info = await transporter.sendMail({
-      from: `"Admin Panel" <${process.env.EMAIL_USER}>`,
+      from: `${process.env.EMAIL_USER}`,
       to,
       subject,
       html,
